@@ -1,0 +1,564 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+      <Schema Namespace="Хранилище ip24Model" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="Accessories">
+          <Key>
+            <PropertyRef Name="Id_accessories" />
+          </Key>
+          <Property Name="Id_accessories" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="View_accessories" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="Color" Type="nvarchar" MaxLength="10" Nullable="false" />
+          <Property Name="Price" Type="money" Nullable="false" />
+          <Property Name="Availability_accessories" Type="bit" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Authorization">
+          <Key>
+            <PropertyRef Name="Login" />
+            <PropertyRef Name="Password" />
+          </Key>
+          <Property Name="Login" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="Password" Type="nvarchar" MaxLength="50" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Client">
+          <Key>
+            <PropertyRef Name="Full_name_client" />
+          </Key>
+          <Property Name="Full_name_client" Type="nvarchar" MaxLength="100" Nullable="false" />
+          <Property Name="Address" Type="nvarchar" MaxLength="100" Nullable="false" />
+          <Property Name="Number_client" Type="int" Nullable="false" />
+          <Property Name="Quantity" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Construction">
+          <Key>
+            <PropertyRef Name="Id_construction" />
+          </Key>
+          <Property Name="Id_construction" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="View_construction" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="Color" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="Image" Type="nvarchar" MaxLength="250" />
+          <Property Name="Prise" Type="money" Nullable="false" />
+          <Property Name="Avaibility_construction" Type="bit" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Implementation_order">
+          <Key>
+            <PropertyRef Name="Full_name_performer" />
+            <PropertyRef Name="Id_order" />
+          </Key>
+          <Property Name="Full_name_performer" Type="nvarchar" MaxLength="100" Nullable="false" />
+          <Property Name="Id_order" Type="int" Nullable="false" />
+          <Property Name="Date" Type="date" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Order">
+          <Key>
+            <PropertyRef Name="Id_order" />
+          </Key>
+          <Property Name="Id_order" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Full_name_client" Type="nvarchar" MaxLength="100" Nullable="false" />
+          <Property Name="Date" Type="date" Nullable="false" />
+          <Property Name="Order_status" Type="bit" Nullable="false" />
+          <Property Name="Id_ construction" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Ordering_accessories">
+          <Key>
+            <PropertyRef Name="Id_order" />
+            <PropertyRef Name="Id_accessories" />
+          </Key>
+          <Property Name="Id_order" Type="int" Nullable="false" />
+          <Property Name="Id_accessories" Type="int" Nullable="false" />
+          <Property Name="Order_status" Type="bit" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Performer">
+          <Key>
+            <PropertyRef Name="Full_name_performer" />
+          </Key>
+          <Property Name="Full_name_performer" Type="nvarchar" MaxLength="100" Nullable="false" />
+          <Property Name="Experience" Type="int" Nullable="false" />
+          <Property Name="Education" Type="nvarchar" MaxLength="100" Nullable="false" />
+          <Property Name="Number_perfomer" Type="int" Nullable="false" />
+          <Property Name="Login" Type="nvarchar" MaxLength="50" />
+          <Property Name="Password" Type="nvarchar" MaxLength="50" />
+        </EntityType>
+        <Association Name="FK_Implementation_order_Order">
+          <End Role="Order" Type="Self.Order" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="Implementation_order" Type="Self.Implementation_order" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Order">
+              <PropertyRef Name="Id_order" />
+            </Principal>
+            <Dependent Role="Implementation_order">
+              <PropertyRef Name="Id_order" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Implementation_order_Performer">
+          <End Role="Performer" Type="Self.Performer" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="Implementation_order" Type="Self.Implementation_order" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Performer">
+              <PropertyRef Name="Full_name_performer" />
+            </Principal>
+            <Dependent Role="Implementation_order">
+              <PropertyRef Name="Full_name_performer" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Order_Client">
+          <End Role="Client" Type="Self.Client" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="Order" Type="Self.Order" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Client">
+              <PropertyRef Name="Full_name_client" />
+            </Principal>
+            <Dependent Role="Order">
+              <PropertyRef Name="Full_name_client" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Order_Construction">
+          <End Role="Construction" Type="Self.Construction" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="Order" Type="Self.Order" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Construction">
+              <PropertyRef Name="Id_construction" />
+            </Principal>
+            <Dependent Role="Order">
+              <PropertyRef Name="Id_ construction" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Ordering_accessories_Accessories">
+          <End Role="Accessories" Type="Self.Accessories" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="Ordering_accessories" Type="Self.Ordering_accessories" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Accessories">
+              <PropertyRef Name="Id_accessories" />
+            </Principal>
+            <Dependent Role="Ordering_accessories">
+              <PropertyRef Name="Id_accessories" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Ordering_accessories_Order">
+          <End Role="Order" Type="Self.Order" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="Ordering_accessories" Type="Self.Ordering_accessories" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Order">
+              <PropertyRef Name="Id_order" />
+            </Principal>
+            <Dependent Role="Ordering_accessories">
+              <PropertyRef Name="Id_order" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Performer_Authorization1">
+          <End Role="Authorization" Type="Self.Authorization" Multiplicity="0..1" />
+          <End Role="Performer" Type="Self.Performer" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Authorization">
+              <PropertyRef Name="Login" />
+              <PropertyRef Name="Password" />
+            </Principal>
+            <Dependent Role="Performer">
+              <PropertyRef Name="Password" />
+              <PropertyRef Name="Login" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="Хранилище ip24ModelContainer">
+          <EntitySet Name="Accessories" EntityType="Self.Accessories" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Authorization" EntityType="Self.Authorization" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Client" EntityType="Self.Client" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Construction" EntityType="Self.Construction" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Implementation_order" EntityType="Self.Implementation_order" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Order" EntityType="Self.Order" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Ordering_accessories" EntityType="Self.Ordering_accessories" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Performer" EntityType="Self.Performer" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK_Implementation_order_Order" Association="Self.FK_Implementation_order_Order">
+            <End Role="Order" EntitySet="Order" />
+            <End Role="Implementation_order" EntitySet="Implementation_order" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Implementation_order_Performer" Association="Self.FK_Implementation_order_Performer">
+            <End Role="Performer" EntitySet="Performer" />
+            <End Role="Implementation_order" EntitySet="Implementation_order" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Order_Client" Association="Self.FK_Order_Client">
+            <End Role="Client" EntitySet="Client" />
+            <End Role="Order" EntitySet="Order" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Order_Construction" Association="Self.FK_Order_Construction">
+            <End Role="Construction" EntitySet="Construction" />
+            <End Role="Order" EntitySet="Order" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Ordering_accessories_Accessories" Association="Self.FK_Ordering_accessories_Accessories">
+            <End Role="Accessories" EntitySet="Accessories" />
+            <End Role="Ordering_accessories" EntitySet="Ordering_accessories" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Ordering_accessories_Order" Association="Self.FK_Ordering_accessories_Order">
+            <End Role="Order" EntitySet="Order" />
+            <End Role="Ordering_accessories" EntitySet="Ordering_accessories" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Performer_Authorization1" Association="Self.FK_Performer_Authorization1">
+            <End Role="Authorization" EntitySet="Authorization" />
+            <End Role="Performer" EntitySet="Performer" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="ip24Model" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="Accessories">
+          <Key>
+            <PropertyRef Name="Id_accessories" />
+          </Key>
+          <Property Name="Id_accessories" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="View_accessories" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Color" Type="String" MaxLength="10" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Price" Type="Decimal" Precision="19" Scale="4" Nullable="false" />
+          <Property Name="Availability_accessories" Type="Boolean" Nullable="false" />
+          <NavigationProperty Name="Ordering_accessories" Relationship="Self.FK_Ordering_accessories_Accessories" FromRole="Accessories" ToRole="Ordering_accessories" />
+        </EntityType>
+        <EntityType Name="Authorization">
+          <Key>
+            <PropertyRef Name="Login" />
+            <PropertyRef Name="Password" />
+          </Key>
+          <Property Name="Login" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Password" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <NavigationProperty Name="Performer" Relationship="Self.FK_Performer_Authorization1" FromRole="Authorization" ToRole="Performer" />
+        </EntityType>
+        <EntityType Name="Client">
+          <Key>
+            <PropertyRef Name="Full_name_client" />
+          </Key>
+          <Property Name="Full_name_client" Type="String" MaxLength="100" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Address" Type="String" MaxLength="100" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Number_client" Type="Int32" Nullable="false" />
+          <Property Name="Quantity" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="Order" Relationship="Self.FK_Order_Client" FromRole="Client" ToRole="Order" />
+        </EntityType>
+        <EntityType Name="Construction">
+          <Key>
+            <PropertyRef Name="Id_construction" />
+          </Key>
+          <Property Name="Id_construction" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="View_construction" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Color" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Image" Type="String" MaxLength="250" FixedLength="false" Unicode="true" />
+          <Property Name="Prise" Type="Decimal" Precision="19" Scale="4" Nullable="false" />
+          <Property Name="Avaibility_construction" Type="Boolean" Nullable="false" />
+          <NavigationProperty Name="Order" Relationship="Self.FK_Order_Construction" FromRole="Construction" ToRole="Order" />
+        </EntityType>
+        <EntityType Name="Implementation_order">
+          <Key>
+            <PropertyRef Name="Full_name_performer" />
+            <PropertyRef Name="Id_order" />
+          </Key>
+          <Property Name="Full_name_performer" Type="String" MaxLength="100" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Id_order" Type="Int32" Nullable="false" />
+          <Property Name="Date" Type="DateTime" Nullable="false" Precision="0" />
+          <NavigationProperty Name="Order" Relationship="Self.FK_Implementation_order_Order" FromRole="Implementation_order" ToRole="Order" />
+          <NavigationProperty Name="Performer" Relationship="Self.FK_Implementation_order_Performer" FromRole="Implementation_order" ToRole="Performer" />
+        </EntityType>
+        <EntityType Name="Order">
+          <Key>
+            <PropertyRef Name="Id_order" />
+          </Key>
+          <Property Name="Id_order" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Full_name_client" Type="String" MaxLength="100" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Date" Type="DateTime" Nullable="false" Precision="0" />
+          <Property Name="Order_status" Type="Boolean" Nullable="false" />
+          <Property Name="Id__construction" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="Client" Relationship="Self.FK_Order_Client" FromRole="Order" ToRole="Client" />
+          <NavigationProperty Name="Construction" Relationship="Self.FK_Order_Construction" FromRole="Order" ToRole="Construction" />
+          <NavigationProperty Name="Implementation_order" Relationship="Self.FK_Implementation_order_Order" FromRole="Order" ToRole="Implementation_order" />
+          <NavigationProperty Name="Ordering_accessories" Relationship="Self.FK_Ordering_accessories_Order" FromRole="Order" ToRole="Ordering_accessories" />
+        </EntityType>
+        <EntityType Name="Ordering_accessories">
+          <Key>
+            <PropertyRef Name="Id_order" />
+            <PropertyRef Name="Id_accessories" />
+          </Key>
+          <Property Name="Id_order" Type="Int32" Nullable="false" />
+          <Property Name="Id_accessories" Type="Int32" Nullable="false" />
+          <Property Name="Order_status" Type="Boolean" Nullable="false" />
+          <NavigationProperty Name="Accessories" Relationship="Self.FK_Ordering_accessories_Accessories" FromRole="Ordering_accessories" ToRole="Accessories" />
+          <NavigationProperty Name="Order" Relationship="Self.FK_Ordering_accessories_Order" FromRole="Ordering_accessories" ToRole="Order" />
+        </EntityType>
+        <EntityType Name="Performer">
+          <Key>
+            <PropertyRef Name="Full_name_performer" />
+          </Key>
+          <Property Name="Full_name_performer" Type="String" MaxLength="100" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Experience" Type="Int32" Nullable="false" />
+          <Property Name="Education" Type="String" MaxLength="100" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Number_perfomer" Type="Int32" Nullable="false" />
+          <Property Name="Login" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Password" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="Authorization" Relationship="Self.FK_Performer_Authorization1" FromRole="Performer" ToRole="Authorization" />
+          <NavigationProperty Name="Implementation_order" Relationship="Self.FK_Implementation_order_Performer" FromRole="Performer" ToRole="Implementation_order" />
+        </EntityType>
+        <Association Name="FK_Ordering_accessories_Accessories">
+          <End Role="Accessories" Type="Self.Accessories" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="Ordering_accessories" Type="Self.Ordering_accessories" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Accessories">
+              <PropertyRef Name="Id_accessories" />
+            </Principal>
+            <Dependent Role="Ordering_accessories">
+              <PropertyRef Name="Id_accessories" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Performer_Authorization1">
+          <End Role="Authorization" Type="Self.Authorization" Multiplicity="0..1" />
+          <End Role="Performer" Type="Self.Performer" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Authorization">
+              <PropertyRef Name="Login" />
+              <PropertyRef Name="Password" />
+            </Principal>
+            <Dependent Role="Performer">
+              <PropertyRef Name="Password" />
+              <PropertyRef Name="Login" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Order_Client">
+          <End Role="Client" Type="Self.Client" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="Order" Type="Self.Order" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Client">
+              <PropertyRef Name="Full_name_client" />
+            </Principal>
+            <Dependent Role="Order">
+              <PropertyRef Name="Full_name_client" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Order_Construction">
+          <End Role="Construction" Type="Self.Construction" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="Order" Type="Self.Order" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Construction">
+              <PropertyRef Name="Id_construction" />
+            </Principal>
+            <Dependent Role="Order">
+              <PropertyRef Name="Id__construction" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Implementation_order_Order">
+          <End Role="Order" Type="Self.Order" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="Implementation_order" Type="Self.Implementation_order" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Order">
+              <PropertyRef Name="Id_order" />
+            </Principal>
+            <Dependent Role="Implementation_order">
+              <PropertyRef Name="Id_order" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Implementation_order_Performer">
+          <End Role="Performer" Type="Self.Performer" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="Implementation_order" Type="Self.Implementation_order" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Performer">
+              <PropertyRef Name="Full_name_performer" />
+            </Principal>
+            <Dependent Role="Implementation_order">
+              <PropertyRef Name="Full_name_performer" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Ordering_accessories_Order">
+          <End Role="Order" Type="Self.Order" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="Ordering_accessories" Type="Self.Ordering_accessories" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Order">
+              <PropertyRef Name="Id_order" />
+            </Principal>
+            <Dependent Role="Ordering_accessories">
+              <PropertyRef Name="Id_order" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="Entities1" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="Accessories" EntityType="Self.Accessories" />
+          <EntitySet Name="Authorization" EntityType="Self.Authorization" />
+          <EntitySet Name="Client" EntityType="Self.Client" />
+          <EntitySet Name="Construction" EntityType="Self.Construction" />
+          <EntitySet Name="Implementation_order" EntityType="Self.Implementation_order" />
+          <EntitySet Name="Order" EntityType="Self.Order" />
+          <EntitySet Name="Ordering_accessories" EntityType="Self.Ordering_accessories" />
+          <EntitySet Name="Performer" EntityType="Self.Performer" />
+          <AssociationSet Name="FK_Ordering_accessories_Accessories" Association="Self.FK_Ordering_accessories_Accessories">
+            <End Role="Accessories" EntitySet="Accessories" />
+            <End Role="Ordering_accessories" EntitySet="Ordering_accessories" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Performer_Authorization1" Association="Self.FK_Performer_Authorization1">
+            <End Role="Authorization" EntitySet="Authorization" />
+            <End Role="Performer" EntitySet="Performer" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Order_Client" Association="Self.FK_Order_Client">
+            <End Role="Client" EntitySet="Client" />
+            <End Role="Order" EntitySet="Order" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Order_Construction" Association="Self.FK_Order_Construction">
+            <End Role="Construction" EntitySet="Construction" />
+            <End Role="Order" EntitySet="Order" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Implementation_order_Order" Association="Self.FK_Implementation_order_Order">
+            <End Role="Order" EntitySet="Order" />
+            <End Role="Implementation_order" EntitySet="Implementation_order" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Implementation_order_Performer" Association="Self.FK_Implementation_order_Performer">
+            <End Role="Performer" EntitySet="Performer" />
+            <End Role="Implementation_order" EntitySet="Implementation_order" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Ordering_accessories_Order" Association="Self.FK_Ordering_accessories_Order">
+            <End Role="Order" EntitySet="Order" />
+            <End Role="Ordering_accessories" EntitySet="Ordering_accessories" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="Хранилище ip24ModelContainer" CdmEntityContainer="Entities1">
+          <EntitySetMapping Name="Accessories">
+            <EntityTypeMapping TypeName="ip24Model.Accessories">
+              <MappingFragment StoreEntitySet="Accessories">
+                <ScalarProperty Name="Id_accessories" ColumnName="Id_accessories" />
+                <ScalarProperty Name="View_accessories" ColumnName="View_accessories" />
+                <ScalarProperty Name="Color" ColumnName="Color" />
+                <ScalarProperty Name="Price" ColumnName="Price" />
+                <ScalarProperty Name="Availability_accessories" ColumnName="Availability_accessories" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Authorization">
+            <EntityTypeMapping TypeName="ip24Model.Authorization">
+              <MappingFragment StoreEntitySet="Authorization">
+                <ScalarProperty Name="Login" ColumnName="Login" />
+                <ScalarProperty Name="Password" ColumnName="Password" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Client">
+            <EntityTypeMapping TypeName="ip24Model.Client">
+              <MappingFragment StoreEntitySet="Client">
+                <ScalarProperty Name="Full_name_client" ColumnName="Full_name_client" />
+                <ScalarProperty Name="Address" ColumnName="Address" />
+                <ScalarProperty Name="Number_client" ColumnName="Number_client" />
+                <ScalarProperty Name="Quantity" ColumnName="Quantity" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Construction">
+            <EntityTypeMapping TypeName="ip24Model.Construction">
+              <MappingFragment StoreEntitySet="Construction">
+                <ScalarProperty Name="Id_construction" ColumnName="Id_construction" />
+                <ScalarProperty Name="View_construction" ColumnName="View_construction" />
+                <ScalarProperty Name="Color" ColumnName="Color" />
+                <ScalarProperty Name="Image" ColumnName="Image" />
+                <ScalarProperty Name="Prise" ColumnName="Prise" />
+                <ScalarProperty Name="Avaibility_construction" ColumnName="Avaibility_construction" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Implementation_order">
+            <EntityTypeMapping TypeName="ip24Model.Implementation_order">
+              <MappingFragment StoreEntitySet="Implementation_order">
+                <ScalarProperty Name="Full_name_performer" ColumnName="Full_name_performer" />
+                <ScalarProperty Name="Id_order" ColumnName="Id_order" />
+                <ScalarProperty Name="Date" ColumnName="Date" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Order">
+            <EntityTypeMapping TypeName="ip24Model.Order">
+              <MappingFragment StoreEntitySet="Order">
+                <ScalarProperty Name="Id_order" ColumnName="Id_order" />
+                <ScalarProperty Name="Full_name_client" ColumnName="Full_name_client" />
+                <ScalarProperty Name="Date" ColumnName="Date" />
+                <ScalarProperty Name="Order_status" ColumnName="Order_status" />
+                <ScalarProperty Name="Id__construction" ColumnName="Id_ construction" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Ordering_accessories">
+            <EntityTypeMapping TypeName="ip24Model.Ordering_accessories">
+              <MappingFragment StoreEntitySet="Ordering_accessories">
+                <ScalarProperty Name="Id_order" ColumnName="Id_order" />
+                <ScalarProperty Name="Id_accessories" ColumnName="Id_accessories" />
+                <ScalarProperty Name="Order_status" ColumnName="Order_status" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Performer">
+            <EntityTypeMapping TypeName="ip24Model.Performer">
+              <MappingFragment StoreEntitySet="Performer">
+                <ScalarProperty Name="Full_name_performer" ColumnName="Full_name_performer" />
+                <ScalarProperty Name="Experience" ColumnName="Experience" />
+                <ScalarProperty Name="Education" ColumnName="Education" />
+                <ScalarProperty Name="Number_perfomer" ColumnName="Number_perfomer" />
+                <ScalarProperty Name="Login" ColumnName="Login" />
+                <ScalarProperty Name="Password" ColumnName="Password" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="false" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="Нет" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>
