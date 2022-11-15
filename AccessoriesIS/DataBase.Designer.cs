@@ -1,4 +1,4 @@
-﻿// Создание кода T4 для модели "Y:\Student\19ИП1\ПМ_02 УП_02\2 подгруппа\Логинова\AccessoriesIS-master(2)\AccessoriesIS-master\AccessoriesIS\DataBase.edmx" включено. 
+﻿// Создание кода T4 для модели "O:\1\AccessoriesIS-master(3)\AccessoriesIS-master(2)\AccessoriesIS-master\AccessoriesIS\DataBase.edmx" включено. 
 // Чтобы включить формирование кода прежних версий, измените значение свойства "Стратегия создания кода" конструктора
 // на "Legacy ObjectContext". Это свойство доступно в окне "Свойства", если модель
 // открыта в конструкторе.

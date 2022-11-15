@@ -8,11 +8,11 @@ namespace AccessoriesIS
 {
     class DataBase
     {
-        private static Entities1 _context;
-        public static Entities1 GetContext()
+        private static Entities _context;
+        public static Entities GetContext()
         {
             if (_context == null)
-                _context = new Entities1();
+                _context = new Entities();
             return _context;
         }
     }

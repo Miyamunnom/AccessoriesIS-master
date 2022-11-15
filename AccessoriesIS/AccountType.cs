@@ -12,20 +12,18 @@ namespace AccessoriesIS
     using System;
     using System.Collections.Generic;
     
-    public partial class Performer
+    public partial class AccountType
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
-        public Performer()
+        public AccountType()
         {
-            this.Implementation_order = new HashSet<Implementation_order>();
+            this.Authorization = new HashSet<Authorization>();
         }
     
-        public string Full_name_performer { get; set; }
-        public int Experience { get; set; }
-        public string Education { get; set; }
-        public int Number_perfomer { get; set; }
+        public int Id { get; set; }
+        public string Name { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<Implementation_order> Implementation_order { get; set; }
+        public virtual ICollection<Authorization> Authorization { get; set; }
     }
 }

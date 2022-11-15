@@ -12,16 +12,28 @@
           <Property Name="Id_accessories" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="View_accessories" Type="nvarchar" MaxLength="50" Nullable="false" />
           <Property Name="Color" Type="nvarchar" MaxLength="10" Nullable="false" />
-          <Property Name="Price" Type="money" Nullable="false" />
+          <Property Name="Price" Type="numeric" Precision="18" Scale="0" Nullable="false" />
           <Property Name="Availability_accessories" Type="bit" Nullable="false" />
+          <Property Name="image" Type="nvarchar" MaxLength="250" />
+          <Property Name="Section" Type="int" />
+        </EntityType>
+        <EntityType Name="AccountType">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Name" Type="nvarchar" MaxLength="50" Nullable="false" />
         </EntityType>
         <EntityType Name="Authorization">
           <Key>
-            <PropertyRef Name="Login" />
-            <PropertyRef Name="Password" />
+            <PropertyRef Name="Id" />
           </Key>
           <Property Name="Login" Type="nvarchar" MaxLength="50" Nullable="false" />
           <Property Name="Password" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Full_name_perfomer" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="IdAccountType" Type="int" Nullable="false" />
+          <Property Name="Image" Type="nvarchar" MaxLength="250" />
         </EntityType>
         <EntityType Name="Client">
           <Key>
@@ -79,9 +91,48 @@
           <Property Name="Experience" Type="int" Nullable="false" />
           <Property Name="Education" Type="nvarchar" MaxLength="100" Nullable="false" />
           <Property Name="Number_perfomer" Type="int" Nullable="false" />
-          <Property Name="Login" Type="nvarchar" MaxLength="50" />
-          <Property Name="Password" Type="nvarchar" MaxLength="50" />
         </EntityType>
+        <EntityType Name="Section">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" Nullable="false" />
+          <Property Name="name" Type="nvarchar" MaxLength="50" />
+        </EntityType>
+        <EntityType Name="sysdiagrams">
+          <Key>
+            <PropertyRef Name="diagram_id" />
+          </Key>
+          <Property Name="name" Type="nvarchar" MaxLength="128" Nullable="false" />
+          <Property Name="principal_id" Type="int" Nullable="false" />
+          <Property Name="diagram_id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="version" Type="int" />
+          <Property Name="definition" Type="varbinary(max)" />
+        </EntityType>
+        <Association Name="FK_Accessories_Section">
+          <End Role="Section" Type="Self.Section" Multiplicity="0..1" />
+          <End Role="Accessories" Type="Self.Accessories" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Section">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="Accessories">
+              <PropertyRef Name="Section" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Authorization_AccountType">
+          <End Role="AccountType" Type="Self.AccountType" Multiplicity="1" />
+          <End Role="Authorization" Type="Self.Authorization" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="AccountType">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Authorization">
+              <PropertyRef Name="IdAccountType" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_Implementation_order_Order">
           <End Role="Order" Type="Self.Order" Multiplicity="1">
             <OnDelete Action="Cascade" />
@@ -166,22 +217,9 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK_Performer_Authorization1">
-          <End Role="Authorization" Type="Self.Authorization" Multiplicity="0..1" />
-          <End Role="Performer" Type="Self.Performer" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Authorization">
-              <PropertyRef Name="Login" />
-              <PropertyRef Name="Password" />
-            </Principal>
-            <Dependent Role="Performer">
-              <PropertyRef Name="Password" />
-              <PropertyRef Name="Login" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <EntityContainer Name="Хранилище ip24ModelContainer">
           <EntitySet Name="Accessories" EntityType="Self.Accessories" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="AccountType" EntityType="Self.AccountType" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Authorization" EntityType="Self.Authorization" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Client" EntityType="Self.Client" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Construction" EntityType="Self.Construction" Schema="dbo" store:Type="Tables" />
@@ -189,6 +227,16 @@
           <EntitySet Name="Order" EntityType="Self.Order" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Ordering_accessories" EntityType="Self.Ordering_accessories" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Performer" EntityType="Self.Performer" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Section" EntityType="Self.Section" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="sysdiagrams" EntityType="Self.sysdiagrams" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK_Accessories_Section" Association="Self.FK_Accessories_Section">
+            <End Role="Section" EntitySet="Section" />
+            <End Role="Accessories" EntitySet="Accessories" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Authorization_AccountType" Association="Self.FK_Authorization_AccountType">
+            <End Role="AccountType" EntitySet="AccountType" />
+            <End Role="Authorization" EntitySet="Authorization" />
+          </AssociationSet>
           <AssociationSet Name="FK_Implementation_order_Order" Association="Self.FK_Implementation_order_Order">
             <End Role="Order" EntitySet="Order" />
             <End Role="Implementation_order" EntitySet="Implementation_order" />
@@ -213,10 +261,6 @@
             <End Role="Order" EntitySet="Order" />
             <End Role="Ordering_accessories" EntitySet="Ordering_accessories" />
           </AssociationSet>
-          <AssociationSet Name="FK_Performer_Authorization1" Association="Self.FK_Performer_Authorization1">
-            <End Role="Authorization" EntitySet="Authorization" />
-            <End Role="Performer" EntitySet="Performer" />
-          </AssociationSet>
         </EntityContainer>
       </Schema>
     </edmx:StorageModels>
@@ -230,18 +274,32 @@
           <Property Name="Id_accessories" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="View_accessories" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="Color" Type="String" MaxLength="10" FixedLength="false" Unicode="true" Nullable="false" />
-          <Property Name="Price" Type="Decimal" Precision="19" Scale="4" Nullable="false" />
+          <Property Name="Price" Type="Decimal" Precision="18" Scale="0" Nullable="false" />
           <Property Name="Availability_accessories" Type="Boolean" Nullable="false" />
+          <Property Name="image" Type="String" MaxLength="250" FixedLength="false" Unicode="true" />
+          <Property Name="Section" Type="Int32" />
+          <NavigationProperty Name="Section1" Relationship="Self.FK_Accessories_Section" FromRole="Accessories" ToRole="Section" />
           <NavigationProperty Name="Ordering_accessories" Relationship="Self.FK_Ordering_accessories_Accessories" FromRole="Accessories" ToRole="Ordering_accessories" />
+        </EntityType>
+        <EntityType Name="AccountType">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <NavigationProperty Name="Authorization" Relationship="Self.FK_Authorization_AccountType" FromRole="AccountType" ToRole="Authorization" />
         </EntityType>
         <EntityType Name="Authorization">
           <Key>
-            <PropertyRef Name="Login" />
-            <PropertyRef Name="Password" />
+            <PropertyRef Name="Id" />
           </Key>
           <Property Name="Login" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="Password" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
-          <NavigationProperty Name="Performer" Relationship="Self.FK_Performer_Authorization1" FromRole="Authorization" ToRole="Performer" />
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Full_name_perfomer" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="IdAccountType" Type="Int32" Nullable="false" />
+          <Property Name="Image" Type="String" MaxLength="250" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="AccountType" Relationship="Self.FK_Authorization_AccountType" FromRole="Authorization" ToRole="AccountType" />
         </EntityType>
         <EntityType Name="Client">
           <Key>
@@ -309,11 +367,38 @@
           <Property Name="Experience" Type="Int32" Nullable="false" />
           <Property Name="Education" Type="String" MaxLength="100" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="Number_perfomer" Type="Int32" Nullable="false" />
-          <Property Name="Login" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
-          <Property Name="Password" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
-          <NavigationProperty Name="Authorization" Relationship="Self.FK_Performer_Authorization1" FromRole="Performer" ToRole="Authorization" />
           <NavigationProperty Name="Implementation_order" Relationship="Self.FK_Implementation_order_Performer" FromRole="Performer" ToRole="Implementation_order" />
         </EntityType>
+        <EntityType Name="Section">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" />
+          <Property Name="name" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="Accessories" Relationship="Self.FK_Accessories_Section" FromRole="Section" ToRole="Accessories" />
+        </EntityType>
+        <EntityType Name="sysdiagrams">
+          <Key>
+            <PropertyRef Name="diagram_id" />
+          </Key>
+          <Property Name="name" Type="String" MaxLength="128" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="principal_id" Type="Int32" Nullable="false" />
+          <Property Name="diagram_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="version" Type="Int32" />
+          <Property Name="definition" Type="Binary" MaxLength="Max" FixedLength="false" />
+        </EntityType>
+        <Association Name="FK_Accessories_Section">
+          <End Role="Section" Type="Self.Section" Multiplicity="0..1" />
+          <End Role="Accessories" Type="Self.Accessories" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Section">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="Accessories">
+              <PropertyRef Name="Section" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_Ordering_accessories_Accessories">
           <End Role="Accessories" Type="Self.Accessories" Multiplicity="1">
             <OnDelete Action="Cascade" />
@@ -328,17 +413,15 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK_Performer_Authorization1">
-          <End Role="Authorization" Type="Self.Authorization" Multiplicity="0..1" />
-          <End Role="Performer" Type="Self.Performer" Multiplicity="*" />
+        <Association Name="FK_Authorization_AccountType">
+          <End Role="AccountType" Type="Self.AccountType" Multiplicity="1" />
+          <End Role="Authorization" Type="Self.Authorization" Multiplicity="*" />
           <ReferentialConstraint>
-            <Principal Role="Authorization">
-              <PropertyRef Name="Login" />
-              <PropertyRef Name="Password" />
+            <Principal Role="AccountType">
+              <PropertyRef Name="Id" />
             </Principal>
-            <Dependent Role="Performer">
-              <PropertyRef Name="Password" />
-              <PropertyRef Name="Login" />
+            <Dependent Role="Authorization">
+              <PropertyRef Name="IdAccountType" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -412,8 +495,9 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <EntityContainer Name="Entities1" annotation:LazyLoadingEnabled="true">
+        <EntityContainer Name="Entities" annotation:LazyLoadingEnabled="true">
           <EntitySet Name="Accessories" EntityType="Self.Accessories" />
+          <EntitySet Name="AccountType" EntityType="Self.AccountType" />
           <EntitySet Name="Authorization" EntityType="Self.Authorization" />
           <EntitySet Name="Client" EntityType="Self.Client" />
           <EntitySet Name="Construction" EntityType="Self.Construction" />
@@ -421,13 +505,19 @@
           <EntitySet Name="Order" EntityType="Self.Order" />
           <EntitySet Name="Ordering_accessories" EntityType="Self.Ordering_accessories" />
           <EntitySet Name="Performer" EntityType="Self.Performer" />
+          <EntitySet Name="Section" EntityType="Self.Section" />
+          <EntitySet Name="sysdiagrams" EntityType="Self.sysdiagrams" />
+          <AssociationSet Name="FK_Accessories_Section" Association="Self.FK_Accessories_Section">
+            <End Role="Section" EntitySet="Section" />
+            <End Role="Accessories" EntitySet="Accessories" />
+          </AssociationSet>
           <AssociationSet Name="FK_Ordering_accessories_Accessories" Association="Self.FK_Ordering_accessories_Accessories">
             <End Role="Accessories" EntitySet="Accessories" />
             <End Role="Ordering_accessories" EntitySet="Ordering_accessories" />
           </AssociationSet>
-          <AssociationSet Name="FK_Performer_Authorization1" Association="Self.FK_Performer_Authorization1">
+          <AssociationSet Name="FK_Authorization_AccountType" Association="Self.FK_Authorization_AccountType">
+            <End Role="AccountType" EntitySet="AccountType" />
             <End Role="Authorization" EntitySet="Authorization" />
-            <End Role="Performer" EntitySet="Performer" />
           </AssociationSet>
           <AssociationSet Name="FK_Order_Client" Association="Self.FK_Order_Client">
             <End Role="Client" EntitySet="Client" />
@@ -455,7 +545,7 @@
     <!-- C-S mapping content -->
     <edmx:Mappings>
       <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
-        <EntityContainerMapping StorageEntityContainer="Хранилище ip24ModelContainer" CdmEntityContainer="Entities1">
+        <EntityContainerMapping StorageEntityContainer="Хранилище ip24ModelContainer" CdmEntityContainer="Entities">
           <EntitySetMapping Name="Accessories">
             <EntityTypeMapping TypeName="ip24Model.Accessories">
               <MappingFragment StoreEntitySet="Accessories">
@@ -464,6 +554,16 @@
                 <ScalarProperty Name="Color" ColumnName="Color" />
                 <ScalarProperty Name="Price" ColumnName="Price" />
                 <ScalarProperty Name="Availability_accessories" ColumnName="Availability_accessories" />
+                <ScalarProperty Name="image" ColumnName="image" />
+                <ScalarProperty Name="Section" ColumnName="Section" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="AccountType">
+            <EntityTypeMapping TypeName="ip24Model.AccountType">
+              <MappingFragment StoreEntitySet="AccountType">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
@@ -472,6 +572,10 @@
               <MappingFragment StoreEntitySet="Authorization">
                 <ScalarProperty Name="Login" ColumnName="Login" />
                 <ScalarProperty Name="Password" ColumnName="Password" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="Full_name_perfomer" ColumnName="Full_name_perfomer" />
+                <ScalarProperty Name="IdAccountType" ColumnName="IdAccountType" />
+                <ScalarProperty Name="Image" ColumnName="Image" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
@@ -533,8 +637,25 @@
                 <ScalarProperty Name="Experience" ColumnName="Experience" />
                 <ScalarProperty Name="Education" ColumnName="Education" />
                 <ScalarProperty Name="Number_perfomer" ColumnName="Number_perfomer" />
-                <ScalarProperty Name="Login" ColumnName="Login" />
-                <ScalarProperty Name="Password" ColumnName="Password" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Section">
+            <EntityTypeMapping TypeName="ip24Model.Section">
+              <MappingFragment StoreEntitySet="Section">
+                <ScalarProperty Name="id" ColumnName="id" />
+                <ScalarProperty Name="name" ColumnName="name" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="sysdiagrams">
+            <EntityTypeMapping TypeName="ip24Model.sysdiagrams">
+              <MappingFragment StoreEntitySet="sysdiagrams">
+                <ScalarProperty Name="name" ColumnName="name" />
+                <ScalarProperty Name="principal_id" ColumnName="principal_id" />
+                <ScalarProperty Name="diagram_id" ColumnName="diagram_id" />
+                <ScalarProperty Name="version" ColumnName="version" />
+                <ScalarProperty Name="definition" ColumnName="definition" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

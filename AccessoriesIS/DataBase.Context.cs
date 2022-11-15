@@ -13,10 +13,10 @@ namespace AccessoriesIS
     using System.Data.Entity;
     using System.Data.Entity.Infrastructure;
     
-    public partial class Entities1 : DbContext
+    public partial class Entities : DbContext
     {
-        public Entities1()
-            : base("name=Entities1")
+        public Entities()
+            : base("name=Entities")
         {
         }
     
@@ -26,6 +26,7 @@ namespace AccessoriesIS
         }
     
         public virtual DbSet<Accessories> Accessories { get; set; }
+        public virtual DbSet<AccountType> AccountType { get; set; }
         public virtual DbSet<Authorization> Authorization { get; set; }
         public virtual DbSet<Client> Client { get; set; }
         public virtual DbSet<Construction> Construction { get; set; }
@@ -33,5 +34,7 @@ namespace AccessoriesIS
         public virtual DbSet<Order> Order { get; set; }
         public virtual DbSet<Ordering_accessories> Ordering_accessories { get; set; }
         public virtual DbSet<Performer> Performer { get; set; }
+        public virtual DbSet<Section> Section { get; set; }
+        public virtual DbSet<sysdiagrams> sysdiagrams { get; set; }
     }
 }

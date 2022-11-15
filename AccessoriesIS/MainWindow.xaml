@@ -7,12 +7,9 @@
         mc:Ignorable="d"
         Title="Авторизация" Height="450" Width="379" Style="{StaticResource windowStyle}">
     <Grid>
-       
-
         <Button Content="Вход" HorizontalAlignment="Left" Margin="130,275,0,0" VerticalAlignment="Top" Width="75" Click="Button_auth_Click"/>
         <Image Style="{StaticResource LogoImageStyle}"/>
-        <TextBox x:Name="loginTextBox" HorizontalAlignment="Left" Height="25" Margin="115,175,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="145"/>
+        <TextBox x:Name="loginTextBox" HorizontalAlignment="Left" Height="25" Margin="115,175,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="145"/>
         <PasswordBox x:Name="passwordTextBox" HorizontalAlignment="Left" Margin="115,219,0,0" VerticalAlignment="Top" Width="145" Height="26"/>
-
     </Grid>
 </Window>

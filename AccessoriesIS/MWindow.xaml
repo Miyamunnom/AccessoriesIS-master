@@ -5,18 +5,57 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:AccessoriesIS"
         mc:Ignorable="d"
-        Title="MWindow" Height="450" Width="800">
+        Title="MWindow" Height="450" Width="800" Closed="Window_Closed">
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="200"></ColumnDefinition>
+            <ColumnDefinition Width="*"></ColumnDefinition>
         </Grid.ColumnDefinitions>
-        <DockPanel Grid.Column="0" Background="#10101A"></DockPanel>
-        <StackPanel DockPanel.Dock="Top"  Margin="0,15" Height="35" Orientation="Horizontal">
-            <Image Margin="15,0,0,0" Width="25" Height="25" Source="Resources/Images/Accessorues_Logo.png"></Image>
-            <TextBlock FontSize="15" Margin="15,8,0,7" Foreground="White"
+        <Frame NavigationUIVisibility="Hidden" Content="{Binding CurrentPage}" Grid.Column="1"></Frame>
+        <DockPanel Grid.Column="0" Background="#C3F0D2">
+            <!--панель названия и иконки-->
+            <StackPanel Margin="0,15" Height="35" Orientation="Horizontal" DockPanel.Dock="Top" VerticalAlignment="Top">
+                <Image Margin="15,0,0,0" Width="25" Height="25" Source="Resources/Images/Accessorues_Logo.png"></Image>
+                <TextBlock FontSize="15" Margin="15,0,0,0" Foreground="Black"
                        VerticalAlignment="Center" Text="Аксесcуары" FontWeight="Bold"/>
-        </StackPanel>    
-        
+            </StackPanel>
+            <!--панель снизу-->
+            <StackPanel DockPanel.Dock="Bottom" Background="#B0E0D9" Height="60" Orientation="Horizontal" VerticalAlignment="Bottom">
+                <Border Margin="7" Width="46" CornerRadius="15">
+                    <Border.Background>
+                        <ImageBrush ImageSource="{Binding Authorization.Image, Converter={StaticResource relativeToFullPathConverter}}"></ImageBrush>
+                    </Border.Background>
+                </Border>
+
+                <!--фио и должность-->
+                <StackPanel Margin="5,0,0,0" Width="95" Orientation="Vertical">
+                    <TextBlock FontSize="12" Foreground="White" Margin="0,15,0,0" FontWeight="Bold">
+                        <TextBlock.Text>
+                            <MultiBinding StringFormat ="{}{0}">
+                                <Binding Path="Authorization.Full_name_perfomer"></Binding>
+                            </MultiBinding>
+                        </TextBlock.Text>
+                    </TextBlock>
+                    <TextBlock Foreground="White" FontSize="12" Margin="0,2,0,0" 
+                               FontWeight="Bold" Text="{Binding Authorization.AccountType.Name}"></TextBlock>
+                </StackPanel>
+
+                <Button Width="40" Style="{StaticResource buttonExitStyle}" Click="Button_Click"></Button>
+            </StackPanel>
+            
+            <ListBox ItemContainerStyle="{StaticResource menuListItemStyle}"
+                     Margin="0,20,0,20" ItemsSource="{Binding PageCollection}"
+                     SelectedItem="{Binding CurrentPage}"
+                     BorderThickness="0" Background="Transparent" DockPanel.Dock="Top" >
+                <ListBox.ItemTemplate>
+                    <DataTemplate>
+                        <TextBlock Foreground="White" FontWeight="Bold"
+                                   VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="16"
+                                   Text="{Binding Title}">
+                        </TextBlock>
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+            </ListBox>
+        </DockPanel>
     </Grid>
-    
 </Window>

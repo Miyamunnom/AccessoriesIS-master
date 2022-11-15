@@ -25,7 +25,10 @@ namespace AccessoriesIS
         public string Color { get; set; }
         public decimal Price { get; set; }
         public bool Availability_accessories { get; set; }
+        public string image { get; set; }
+        public Nullable<int> Section { get; set; }
     
+        public virtual Section Section1 { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Ordering_accessories> Ordering_accessories { get; set; }
     }
